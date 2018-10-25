@@ -1,0 +1,11 @@
+{% extends "posts/post_base.html" %}
+{% load bootstrap4 %}
+{% block post_content %}
+  <h4>Create a new Post</h4>
+  {# O atributo action faz a ligacao com a CBV das views.py que vai manipular a inforamcao do formulario #}
+  <form id='postform' action="{% url 'posts:create' %}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" class="btn btn-primary btn-large" value="Post">
+  </form>
+{% endblock %}

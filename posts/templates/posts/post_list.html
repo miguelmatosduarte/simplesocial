@@ -1,0 +1,58 @@
+{% extends "posts/post_base.html" %}
+{% block pre_post %}
+<div class="col-md-4">
+  <!-- request.user e o User object model -->
+  {% if request.user.is_authenticated %}
+  <div class="card card-with-shadow">
+    <div class="content">
+      <h5 class="title">Your Groups</h5>
+      <ul class="list-unstyled">
+        <!-- user_groups e o related_name do campo user da classe GroupMember, que e uma foreign key para a classe User e tem como related_name user_groups
+        nos models, ao termos adicionado as linhas register = template.Library(), podemos nos templates concatenar com o rpefixo get_ para obtermos os
+        related objects -->
+        {% for member_group in get_user_groups %}
+          <li class="group li-with-bullet">
+            <a href="{% url 'groups:single' slug=member_group.group.slug %}"></a>
+          </li>
+        {% endfor %}
+
+      </ul>
+
+    </div>
+
+  </div>
+
+  {% endif %}
+  <div class="card card-with-shadow">
+    <div class="content">
+      <h5 class="title">All Groups</h5>
+      <ul class="list-unstyled">
+        <!--Aqui fizemos de forma diferente: nao usamos o metodo implicito get_ concatenado com o related_name defenido no modelo, mas adicionamos um atributo ao dicionario get_context_data que resulta da obtencao da totalidade dos grupos -->
+        {% for group in all_groups %}
+          <li class='group li-with-bullet'>
+            <a href="{% url 'groups:single' slug=group.slug %}">{{ group.name }}</a>
+          </li>
+        {% endfor %}
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block post_content %}
+<div class="col-md-8">
+  <!-- O django faz automaticamente esta listagem, podemos referi-la como post_list
+  com esta linha queryset=models.Post.objects.all() na classe PostList
+  -->
+  {% for post in post_list %}
+    {% include "posts/_post.html" %}
+  {% endfor %}
+
+</div>
+
+{% endblock %}
